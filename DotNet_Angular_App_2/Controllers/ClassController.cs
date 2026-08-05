@@ -1,49 +1,78 @@
-﻿using DotNet_Angular_App_2.Repositories;
-using Microsoft.AspNetCore.Http;
+﻿using DotNet_Angular_App_2.Models;
+using DotNet_Angular_App_2.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet_Angular_App_2.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class ClassController(IClassRepository _classRepository) : ControllerBase
+    [Route("api/[controller]")]
+    public class ClassController : ControllerBase
     {
+        private readonly IClassRepository _repository;
+
+        public ClassController(IClassRepository repository)
+        {
+            _repository = repository;
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllStudents()
         {
-            var students = await _classRepository.GetAllStudentAsync();
+            var students = await _repository.GetAllStudentAsync();
             return Ok(students);
         }
-        [HttpGet("{id}")]
+
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetStudentById(int id)
         {
-            var student = await _classRepository.GetStudentById(id);
+            var student = await _repository.GetStudentById(id);
+
             if (student == null)
-            {
                 return NotFound();
-            }
+
             return Ok(student);
         }
+
         [HttpPost]
-        public async Task<IActionResult> AddStudent([FromBody] Models.Class student)
+        public async Task<IActionResult> AddStudent([FromBody] Class student)
         {
-            await _classRepository.AddAsync(student);
-            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, student);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _repository.AddAsync(student);
+
+            return CreatedAtAction(
+                nameof(GetStudentById),
+                new { id = student.Id },
+                student);
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, [FromBody] Models.Class student)
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody] Class student)
         {
             if (id != student.Id)
-            {
-                return BadRequest();
-            }
-            await _classRepository.UpdateAsync(student);
+                return BadRequest("Id mismatch.");
+
+            var existing = await _repository.GetStudentById(id);
+
+            if (existing == null)
+                return NotFound();
+
+            await _repository.UpdateAsync(student);
+
             return NoContent();
         }
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            await _classRepository.DeleteAsync(id);
+            var existing = await _repository.GetStudentById(id);
+
+            if (existing == null)
+                return NotFound();
+
+            await _repository.DeleteAsync(id);
+
             return NoContent();
         }
     }

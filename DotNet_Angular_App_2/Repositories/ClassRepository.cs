@@ -4,40 +4,61 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotNet_Angular_App_2.Repositories
 {
-    public class ClassRepository(ClassDbContext _context) : IClassRepository
+    public class ClassRepository : IClassRepository
     {
+        private readonly ClassDbContext _context;
+
+        public ClassRepository(ClassDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Class>> GetAllStudentAsync()
+        {
+            return await _context.Classes
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<Class?> GetStudentById(int id)
+        {
+            return await _context.Classes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task AddAsync(Class student)
         {
+            // Ensure SQL Server generates the identity value
+            student.Id = 0;
 
             await _context.Classes.AddAsync(student);
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(int id)
+        public async Task UpdateAsync(Class student)
         {
-           var stud = _context.Classes.FirstOrDefault(c => c.Id == id);
-            if (stud != null)
-            {
-                _context.Classes.Remove(stud);
-                return _context.SaveChangesAsync();
-            }
-            return Task.CompletedTask;
+            var existingStudent = await _context.Classes.FindAsync(student.Id);
+
+            if (existingStudent == null)
+                return;
+
+            existingStudent.Name = student.Name;
+            existingStudent.Grade = student.Grade;
+            existingStudent.IsPassed = student.IsPassed;
+
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Class>> GetAllStudentAsync()
+        public async Task DeleteAsync(int id)
         {
-            return await _context.Classes.ToListAsync();
-        }
+            var student = await _context.Classes.FindAsync(id);
 
-        public async Task<Class?> GetStudentById(int id)
-        {
-           return await _context.Classes.FirstOrDefaultAsync(c => c.Id == id);
-        }
+            if (student == null)
+                return;
 
-        public Task UpdateAsync( Class student)
-        {
-            _context.Classes.Update(student);
-                        return _context.SaveChangesAsync();
+            _context.Classes.Remove(student);
+            await _context.SaveChangesAsync();
         }
     }
 }
