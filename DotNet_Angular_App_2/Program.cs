@@ -1,4 +1,5 @@
 using DotNet_Angular_App_2.Data;
+using DotNet_Angular_App_2.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<ClassDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IClassRepository, ClassRepository>();
 
 var app = builder.Build();
 
