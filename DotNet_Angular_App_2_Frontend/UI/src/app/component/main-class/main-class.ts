@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms'
 })
 export class MainClass {
 
+
   classForm :FormGroup = new FormGroup({})
 
   constructor(private fb: FormBuilder){
