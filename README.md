@@ -419,5 +419,3 @@ LinkedIn
 https://www.linkedin.com/in/tapan-ray/
 
 ---
-
-## ⭐ If you found this project helpful, consider giving it a Star on GitHub!
