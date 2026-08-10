@@ -24,13 +24,8 @@ import { Class } from '../../Model/class';
 })
 export class MainClass implements OnInit {
 
-<<<<<<< HEAD
 
   classForm :FormGroup = new FormGroup({})
-=======
-  // Form
-  classForm!: FormGroup;
->>>>>>> 82e559e (Implement Angular CRUD and configure CORS)
 
   // List of students
   students: Class[] = [];
