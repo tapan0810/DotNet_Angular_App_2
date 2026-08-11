@@ -1,7 +1,6 @@
 ﻿using DotNet_Angular_App_2.Data;
 using DotNet_Angular_App_2.Models;
 using Microsoft.EntityFrameworkCore;
-
 namespace DotNet_Angular_App_2.Repositories
 {
     public class ClassRepository : IClassRepository
