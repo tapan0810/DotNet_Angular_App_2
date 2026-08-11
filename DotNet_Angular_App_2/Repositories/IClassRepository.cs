@@ -4,7 +4,8 @@ namespace DotNet_Angular_App_2.Repositories
 {
     public interface IClassRepository
     {
-        Task<IEnumerable<Class>> GetAllStudentAsync();
+        Task<IEnumerable<Class>>
+ GetAllStudentAsync();
 
         Task<Class?> GetStudentById(int id);
         Task AddAsync(Class student);
