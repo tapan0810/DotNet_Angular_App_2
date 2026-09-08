@@ -10,12 +10,5 @@ namespace DotNet_Angular_App_2.Data
         }
 
         public DbSet<Class> Classes => Set<Class>();
-
-        internal async Task<Class?> FirstOrDefault(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
-        }
     }
-
-
 }
