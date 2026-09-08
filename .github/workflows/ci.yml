@@ -14,10 +14,12 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      - name: Restore
+      - name: Restore application
         run: dotnet restore DotNet_Angular_App_2.sln
-      - name: Build
+      - name: Build application
         run: dotnet build DotNet_Angular_App_2.sln --configuration Release --no-restore
+      - name: Restore tests
+        run: dotnet restore tests/DotNet_Angular_App_2.Tests/DotNet_Angular_App_2.Tests.csproj
       - name: Test
         run: dotnet test tests/DotNet_Angular_App_2.Tests/DotNet_Angular_App_2.Tests.csproj --configuration Release --no-restore --verbosity normal
 
